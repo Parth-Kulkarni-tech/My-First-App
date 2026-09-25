@@ -13,8 +13,8 @@ st.set_page_config(
     page_icon="✈️", # You can use an emoji or a path to an image file
     layout="wide"
 )
-# 1. Page Configuration
-st.set_page_config(page_title="AI Travel Assistant", page_icon="✈️", layout="wide")
+
+
 
 # 2. Live Animated Heading using HTML/CSS
 st.markdown(
