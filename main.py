@@ -8,7 +8,11 @@ load_dotenv()
 
 # Initialize Gemini Client
 client = genai.Client()
-
+st.set_page_config(
+    page_title="Parth's APP", 
+    page_icon="✈️", # You can use an emoji or a path to an image file
+    layout="wide"
+)
 # 1. Page Configuration
 st.set_page_config(page_title="AI Travel Assistant", page_icon="✈️", layout="wide")
 
