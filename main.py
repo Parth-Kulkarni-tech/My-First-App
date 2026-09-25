@@ -5,7 +5,7 @@ from google import genai
 from dotenv import load_dotenv
 
 # ============================================================
-# APP CONFIGURATION
+# CONFIG
 # ============================================================
 
 load_dotenv()
@@ -18,7 +18,7 @@ st.set_page_config(
 )
 
 # ============================================================
-# GEMINI API CONFIGURATION
+# GEMINI API
 # ============================================================
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -31,43 +31,40 @@ except Exception:
 
 if not api_key:
     st.error(
-        "🔑 Gemini API key is missing.\n\n"
-        "For local use, add GEMINI_API_KEY to your .env file. "
-        "For Streamlit Cloud, add GEMINI_API_KEY to Secrets."
+        "🔑 Gemini API key not found. "
+        "Add GEMINI_API_KEY to your .env file or Streamlit Secrets."
     )
     st.stop()
 
 client = genai.Client(api_key=api_key)
 
 # ============================================================
-# PREMIUM VISUAL STYLING
+# GLOBAL CSS
 # ============================================================
 
 st.markdown(
     """
     <style>
 
-    /* ======================================================
-       GLOBAL
-       ====================================================== */
+    /* ---------- PAGE ---------- */
 
     .stApp {
         background:
             radial-gradient(
-                circle at 10% 10%,
-                rgba(59, 130, 246, 0.12),
-                transparent 28%
+                circle at 0% 0%,
+                rgba(59,130,246,0.14),
+                transparent 30%
             ),
             radial-gradient(
-                circle at 90% 15%,
-                rgba(168, 85, 247, 0.13),
-                transparent 28%
+                circle at 100% 10%,
+                rgba(139,92,246,0.15),
+                transparent 30%
             ),
             linear-gradient(
                 135deg,
                 #f8fbff 0%,
-                #eef5ff 48%,
-                #f7f1ff 100%
+                #eef5ff 50%,
+                #f7f2ff 100%
             );
     }
 
@@ -77,19 +74,16 @@ st.markdown(
         padding-bottom: 4rem;
     }
 
-    /* ======================================================
-       SIDEBAR
-       ====================================================== */
+    /* ---------- SIDEBAR ---------- */
 
     section[data-testid="stSidebar"] {
         background:
             linear-gradient(
                 180deg,
                 #0f172a 0%,
-                #172554 48%,
+                #172554 45%,
                 #312e81 100%
             );
-        border-right: 1px solid rgba(255,255,255,0.12);
     }
 
     section[data-testid="stSidebar"] h1,
@@ -98,181 +92,205 @@ st.markdown(
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] span {
-        color: #ffffff !important;
+        color: white !important;
     }
 
     section[data-testid="stSidebar"] hr {
         border-color: rgba(255,255,255,0.15);
     }
 
-    /* ======================================================
-       HERO
-       ====================================================== */
+    /* ---------- HERO ---------- */
 
-    .hero-box {
-        padding: 3rem 3rem 2.8rem 3rem;
-        border-radius: 30px;
+    .voyage-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 3.5rem 3rem;
+        border-radius: 32px;
         background:
             linear-gradient(
                 135deg,
                 #0f172a 0%,
-                #172554 45%,
-                #4c1d95 100%
+                #172554 40%,
+                #3730a3 72%,
+                #6d28d9 100%
             );
         box-shadow:
-            0 25px 60px rgba(30, 41, 59, 0.22);
-        margin-bottom: 2rem;
+            0 25px 70px rgba(30,41,59,0.25);
+        margin-bottom: 2.5rem;
+    }
+
+    .voyage-hero:before {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: rgba(96,165,250,0.18);
+        right: -100px;
+        top: -120px;
+        filter: blur(4px);
+    }
+
+    .voyage-hero:after {
+        content: "";
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        border-radius: 50%;
+        background: rgba(192,132,252,0.14);
+        left: 40%;
+        bottom: -150px;
+    }
+
+    .hero-content {
         position: relative;
-        overflow: hidden;
-    }
-
-    .hero-box::before {
-        content: "";
-        position: absolute;
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        background: rgba(96, 165, 250, 0.18);
-        top: -100px;
-        right: -50px;
-        filter: blur(5px);
-    }
-
-    .hero-box::after {
-        content: "";
-        position: absolute;
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        background: rgba(192, 132, 252, 0.15);
-        bottom: -80px;
-        left: 20%;
+        z-index: 2;
     }
 
     .hero-badge {
         display: inline-block;
-        padding: 0.45rem 0.9rem;
-        border-radius: 999px;
+        padding: 0.45rem 0.95rem;
+        border-radius: 50px;
         background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.20);
         color: #dbeafe;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        margin-bottom: 1rem;
-    }
-
-    .hero-title {
-        font-size: 4.4rem;
-        line-height: 1;
-        font-weight: 900;
-        color: white;
-        letter-spacing: -3px;
-        margin-bottom: 0.8rem;
-    }
-
-    .hero-subtitle {
-        color: #dbeafe;
-        font-size: 1.15rem;
-        line-height: 1.7;
-        max-width: 760px;
-    }
-
-    /* ======================================================
-       SECTION HEADERS
-       ====================================================== */
-
-    .section-title {
-        color: #111827;
-        font-size: 1.8rem;
+        font-size: 0.75rem;
         font-weight: 800;
-        margin-top: 1.5rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .section-subtitle {
-        color: #64748b;
-        font-size: 1rem;
+        letter-spacing: 1.5px;
         margin-bottom: 1.2rem;
     }
 
-    /* ======================================================
-       CARDS
-       ====================================================== */
+    .hero-title {
+        margin: 0;
+        color: white;
+        font-size: 4.7rem;
+        line-height: 0.95;
+        font-weight: 900;
+        letter-spacing: -4px;
+    }
 
-    .travel-card {
+    .hero-title span {
+        color: #93c5fd;
+    }
+
+    .hero-description {
+        margin-top: 1.2rem;
+        max-width: 760px;
+        color: #dbeafe;
+        font-size: 1.12rem;
+        line-height: 1.7;
+    }
+
+    .hero-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.6rem;
+    }
+
+    .hero-feature {
+        padding: 0.5rem 0.85rem;
+        border-radius: 50px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.13);
+        color: #f8fafc;
+        font-size: 0.82rem;
+    }
+
+    /* ---------- SECTION TITLES ---------- */
+
+    .section-heading {
+        font-size: 1.8rem;
+        font-weight: 850;
+        color: #111827;
+        margin-top: 0.7rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .section-description {
+        color: #64748b;
+        font-size: 0.98rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* ---------- DESTINATION CARDS ---------- */
+
+    .destination-card {
         background: rgba(255,255,255,0.86);
-        border: 1px solid rgba(148,163,184,0.18);
-        border-radius: 20px;
+        border: 1px solid rgba(148,163,184,0.20);
+        border-radius: 22px;
         padding: 1.35rem;
-        min-height: 145px;
+        min-height: 170px;
         box-shadow:
-            0 8px 25px rgba(15,23,42,0.06);
+            0 10px 30px rgba(15,23,42,0.06);
         transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
     }
 
-    .travel-card:hover {
-        transform: translateY(-4px);
+    .destination-card:hover {
+        transform: translateY(-5px);
         box-shadow:
-            0 15px 35px rgba(37,99,235,0.12);
+            0 18px 40px rgba(37,99,235,0.12);
     }
 
-    .travel-card-title {
+    .destination-icon {
+        font-size: 2rem;
+    }
+
+    .destination-name {
+        color: #111827;
         font-size: 1.15rem;
         font-weight: 800;
-        color: #111827;
-        margin-bottom: 0.3rem;
+        margin-top: 0.5rem;
     }
 
-    .travel-card-location {
+    .destination-country {
         color: #6366f1;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 700;
-        margin-bottom: 0.8rem;
+        margin-top: 0.2rem;
     }
 
-    .travel-card-text {
+    .destination-text {
         color: #64748b;
-        font-size: 0.9rem;
+        font-size: 0.86rem;
         line-height: 1.5;
+        margin-top: 0.7rem;
     }
 
-    /* ======================================================
-       METRIC CARDS
-       ====================================================== */
+    /* ---------- METRIC CARDS ---------- */
 
-    .metric-box {
+    .custom-metric {
         background: rgba(255,255,255,0.9);
         border: 1px solid rgba(148,163,184,0.18);
-        border-radius: 18px;
-        padding: 1.15rem;
+        border-radius: 20px;
+        padding: 1.2rem;
         text-align: center;
         box-shadow:
-            0 7px 22px rgba(15,23,42,0.06);
+            0 8px 25px rgba(15,23,42,0.06);
     }
 
     .metric-icon {
-        font-size: 1.4rem;
-        margin-bottom: 0.3rem;
+        font-size: 1.45rem;
     }
 
-    .metric-value {
-        font-size: 1.35rem;
-        font-weight: 800;
+    .metric-number {
         color: #111827;
+        font-size: 1.25rem;
+        font-weight: 850;
+        margin-top: 0.3rem;
     }
 
     .metric-label {
         color: #64748b;
-        font-size: 0.78rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
         margin-top: 0.2rem;
     }
 
-    /* ======================================================
-       BUTTONS
-       ====================================================== */
+    /* ---------- BUTTON ---------- */
 
     .stButton > button {
         border: none;
@@ -288,98 +306,65 @@ st.markdown(
                 #7c3aed
             );
         box-shadow:
-            0 8px 20px rgba(79,70,229,0.25);
+            0 8px 22px rgba(79,70,229,0.28);
         transition: all 0.25s ease;
     }
 
     .stButton > button:hover {
         transform: translateY(-2px);
         box-shadow:
-            0 12px 28px rgba(79,70,229,0.35);
+            0 13px 30px rgba(79,70,229,0.38);
     }
 
-    /* ======================================================
-       INPUTS
-       ====================================================== */
+    /* ---------- INPUTS ---------- */
 
     .stTextInput input,
     .stNumberInput input {
         border-radius: 12px;
-        border: 1px solid #dbe3f0;
-        background: rgba(255,255,255,0.9);
     }
 
     .stSelectbox > div > div {
         border-radius: 12px;
-        background: rgba(255,255,255,0.9);
     }
 
-    /* ======================================================
-       ALERTS
-       ====================================================== */
+    /* ---------- DOWNLOAD ---------- */
+
+    .stDownloadButton > button {
+        border-radius: 13px;
+        font-weight: 750;
+        border: 1px solid #c7d2fe;
+        background: #eef2ff;
+        color: #3730a3;
+    }
+
+    .stDownloadButton > button:hover {
+        background: #e0e7ff;
+    }
+
+    /* ---------- ALERTS ---------- */
 
     div[data-testid="stAlert"] {
         border-radius: 15px;
     }
 
-    /* ======================================================
-       METRICS
-       ====================================================== */
-
-    div[data-testid="stMetric"] {
-        background: rgba(255,255,255,0.88);
-        border-radius: 18px;
-        padding: 1rem;
-        border: 1px solid rgba(148,163,184,0.16);
-        box-shadow:
-            0 7px 22px rgba(15,23,42,0.05);
-    }
-
-    /* ======================================================
-       DIVIDERS
-       ====================================================== */
-
-    hr {
-        border-color: rgba(148,163,184,0.2);
-    }
-
-    /* ======================================================
-       DOWNLOAD BUTTON
-       ====================================================== */
-
-    .stDownloadButton > button {
-        width: 100%;
-        border-radius: 13px;
-        border: 1px solid #c7d2fe;
-        background: #eef2ff;
-        color: #3730a3;
-        font-weight: 700;
-    }
-
-    .stDownloadButton > button:hover {
-        background: #e0e7ff;
-        border-color: #818cf8;
-    }
-
-    /* ======================================================
-       MOBILE
-       ====================================================== */
+    /* ---------- MOBILE ---------- */
 
     @media (max-width: 768px) {
 
-        .hero-box {
-            padding: 2rem 1.4rem;
-            border-radius: 22px;
+        .voyage-hero {
+            padding: 2.2rem 1.5rem;
+            border-radius: 24px;
         }
 
         .hero-title {
-            font-size: 3rem;
+            font-size: 3.1rem;
             letter-spacing: -2px;
         }
 
-        .hero-subtitle {
-            font-size: 1rem;
+        .hero-description {
+            font-size: 0.98rem;
         }
+
     }
 
     </style>
@@ -389,24 +374,39 @@ st.markdown(
 
 # ============================================================
 # HERO
+# IMPORTANT:
+# HTML IS INSIDE THIS MARKDOWN BLOCK ONLY.
 # ============================================================
 
 st.markdown(
     """
-    <div class="hero-box">
+    <div class="voyage-hero">
 
-        <div class="hero-badge">
-            ✨ AI-POWERED TRAVEL ASSISTANT
-        </div>
+        <div class="hero-content">
 
-        <div class="hero-title">
-            VoyageAI
-        </div>
+            <div class="hero-badge">
+                ✨ AI-POWERED TRAVEL ASSISTANT
+            </div>
 
-        <div class="hero-subtitle">
-            Plan unforgettable journeys with your personal AI travel
-            companion. Discover amazing places, local food, hidden gems,
-            activities and perfectly structured itineraries.
+            <div class="hero-title">
+                Voyage<span>AI</span> ✈️
+            </div>
+
+            <div class="hero-description">
+                Plan unforgettable journeys with your personal AI travel
+                companion. Discover amazing destinations, local food,
+                hidden gems, exciting activities and perfectly structured
+                itineraries.
+            </div>
+
+            <div class="hero-features">
+                <div class="hero-feature">🗺️ Smart Itineraries</div>
+                <div class="hero-feature">🍜 Local Food</div>
+                <div class="hero-feature">💎 Hidden Gems</div>
+                <div class="hero-feature">💰 Budget Planning</div>
+                <div class="hero-feature">🎒 Personalized Trips</div>
+            </div>
+
         </div>
 
     </div>
@@ -420,24 +420,24 @@ st.markdown(
 
 with st.sidebar:
 
-    st.markdown("## ✈️ VoyageAI")
+    st.title("✈️ VoyageAI")
 
-    st.caption("Your personal AI travel planner")
+    st.caption("Build your perfect trip")
 
     st.divider()
 
-    st.markdown("### 📍 Destination")
+    st.subheader("📍 Destination")
 
     location = st.text_input(
-        "Where are you going?",
+        "Destination",
         placeholder="Paris, Tokyo, Goa...",
         label_visibility="collapsed",
     )
 
-    st.markdown("### 📅 Duration")
+    st.subheader("📅 Duration")
 
     days = st.number_input(
-        "Number of days",
+        "Trip duration",
         min_value=1,
         max_value=30,
         value=5,
@@ -445,26 +445,26 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    st.markdown("### 💰 Budget")
+    st.subheader("💰 Budget")
 
     budget = st.selectbox(
-        "Choose your budget",
+        "Budget",
         ["Budget", "Moderate", "Luxury"],
         label_visibility="collapsed",
     )
 
-    st.markdown("### 👥 Travel Style")
+    st.subheader("👥 Travel Group")
 
     travel_type = st.radio(
-        "Who are you travelling with?",
+        "Travel group",
         ["Solo", "Friends", "Family", "Couple"],
         label_visibility="collapsed",
     )
 
-    st.markdown("### ✨ Interests")
+    st.subheader("✨ Interests")
 
     interests = st.multiselect(
-        "What do you enjoy?",
+        "Interests",
         [
             "🍜 Food",
             "🏛️ Culture",
@@ -476,63 +476,70 @@ with st.sidebar:
             "🏖️ Relaxation",
             "📚 History",
         ],
-        default=["🍜 Food", "🏛️ Culture"],
+        default=[
+            "🍜 Food",
+            "🏛️ Culture",
+        ],
         label_visibility="collapsed",
     )
 
     st.divider()
 
     plan_trip = st.button(
-        "🚀 Create My Trip",
+        "🚀 CREATE MY TRIP",
         use_container_width=True,
     )
 
     st.divider()
 
-    st.caption("Built with ❤️ by Parth")
-    st.caption("Powered by Streamlit + Gemini")
+    st.caption("Made with ❤️ by Parth")
+    st.caption("Streamlit + Gemini")
+
 
 # ============================================================
-# MAIN SECTION
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">🌍 Design Your Journey</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown(
-    '<div class="section-subtitle">'
-    'Choose your destination and preferences. VoyageAI will handle the rest.'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-# ============================================================
-# INSPIRATION
+# DESIGN YOUR JOURNEY
 # ============================================================
 
 st.markdown(
-    '<div class="section-title">✨ Get Inspired</div>',
+    """
+    <div class="section-heading">
+        🌍 Design Your Journey
+    </div>
+
+    <div class="section-description">
+        Tell VoyageAI what kind of adventure you're looking for.
+    </div>
+    """,
     unsafe_allow_html=True,
 )
+
+# ============================================================
+# DESTINATION INSPIRATION
+# ============================================================
 
 st.markdown(
-    '<div class="section-subtitle">'
-    'A few destinations to spark your imagination.'
-    '</div>',
+    """
+    <div class="section-heading">
+        ✨ Get Inspired
+    </div>
+
+    <div class="section-description">
+        Some ideas for your next adventure.
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
-card1, card2, card3, card4 = st.columns(4)
+c1, c2, c3, c4 = st.columns(4)
 
-with card1:
+with c1:
     st.markdown(
         """
-        <div class="travel-card">
-            <div class="travel-card-title">🗼 Paris</div>
-            <div class="travel-card-location">🇫🇷 France</div>
-            <div class="travel-card-text">
+        <div class="destination-card">
+            <div class="destination-icon">🗼</div>
+            <div class="destination-name">Paris</div>
+            <div class="destination-country">🇫🇷 FRANCE</div>
+            <div class="destination-text">
                 Art, romance, cafés, museums and unforgettable cuisine.
             </div>
         </div>
@@ -540,27 +547,29 @@ with card1:
         unsafe_allow_html=True,
     )
 
-with card2:
+with c2:
     st.markdown(
         """
-        <div class="travel-card">
-            <div class="travel-card-title">🗻 Tokyo</div>
-            <div class="travel-card-location">🇯🇵 Japan</div>
-            <div class="travel-card-text">
-                Futuristic cities, ancient culture, anime and amazing food.
+        <div class="destination-card">
+            <div class="destination-icon">🗻</div>
+            <div class="destination-name">Tokyo</div>
+            <div class="destination-country">🇯🇵 JAPAN</div>
+            <div class="destination-text">
+                Ancient culture, futuristic cities, anime and amazing food.
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-with card3:
+with c3:
     st.markdown(
         """
-        <div class="travel-card">
-            <div class="travel-card-title">🏝️ Bali</div>
-            <div class="travel-card-location">🇮🇩 Indonesia</div>
-            <div class="travel-card-text">
+        <div class="destination-card">
+            <div class="destination-icon">🏝️</div>
+            <div class="destination-name">Bali</div>
+            <div class="destination-country">🇮🇩 INDONESIA</div>
+            <div class="destination-text">
                 Tropical beaches, temples, waterfalls and peaceful escapes.
             </div>
         </div>
@@ -568,14 +577,15 @@ with card3:
         unsafe_allow_html=True,
     )
 
-with card4:
+with c4:
     st.markdown(
         """
-        <div class="travel-card">
-            <div class="travel-card-title">🏙️ Dubai</div>
-            <div class="travel-card-location">🇦🇪 UAE</div>
-            <div class="travel-card-text">
-                Luxury, architecture, shopping, desert adventures and nightlife.
+        <div class="destination-card">
+            <div class="destination-icon">🏙️</div>
+            <div class="destination-name">Dubai</div>
+            <div class="destination-country">🇦🇪 UAE</div>
+            <div class="destination-text">
+                Luxury, shopping, architecture and desert adventures.
             </div>
         </div>
         """,
@@ -587,14 +597,15 @@ with card4:
 # ============================================================
 
 st.markdown(
-    '<div class="section-title">📊 Trip Preview</div>',
-    unsafe_allow_html=True,
-)
+    """
+    <div class="section-heading">
+        📊 Trip Preview
+    </div>
 
-st.markdown(
-    '<div class="section-subtitle">'
-    'Your selected preferences at a glance.'
-    '</div>',
+    <div class="section-description">
+        Your current travel preferences.
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -603,9 +614,9 @@ m1, m2, m3, m4 = st.columns(4)
 with m1:
     st.markdown(
         f"""
-        <div class="metric-box">
+        <div class="custom-metric">
             <div class="metric-icon">📅</div>
-            <div class="metric-value">{days}</div>
+            <div class="metric-number">{days}</div>
             <div class="metric-label">DAYS</div>
         </div>
         """,
@@ -615,9 +626,9 @@ with m1:
 with m2:
     st.markdown(
         f"""
-        <div class="metric-box">
+        <div class="custom-metric">
             <div class="metric-icon">💰</div>
-            <div class="metric-value">{budget}</div>
+            <div class="metric-number">{budget}</div>
             <div class="metric-label">BUDGET</div>
         </div>
         """,
@@ -627,9 +638,9 @@ with m2:
 with m3:
     st.markdown(
         f"""
-        <div class="metric-box">
+        <div class="custom-metric">
             <div class="metric-icon">👥</div>
-            <div class="metric-value">{travel_type}</div>
+            <div class="metric-number">{travel_type}</div>
             <div class="metric-label">TRAVEL STYLE</div>
         </div>
         """,
@@ -639,9 +650,9 @@ with m3:
 with m4:
     st.markdown(
         f"""
-        <div class="metric-box">
+        <div class="custom-metric">
             <div class="metric-icon">✨</div>
-            <div class="metric-value">{len(interests)}</div>
+            <div class="metric-number">{len(interests)}</div>
             <div class="metric-label">INTERESTS</div>
         </div>
         """,
@@ -649,23 +660,23 @@ with m4:
     )
 
 # ============================================================
-# SELECTED DESTINATION
+# DESTINATION PREVIEW
 # ============================================================
 
 if location.strip():
 
-    st.markdown(
-        '<div class="section-title">📍 Your Destination</div>',
-        unsafe_allow_html=True,
-    )
+    st.divider()
+
+    st.subheader(f"📍 Ready for {location}?")
 
     st.info(
-        f"You're planning a **{days}-day {budget.lower()} trip to "
-        f"{location}** with a **{travel_type.lower()}** travel style."
+        f"You're planning a **{days}-day {budget.lower()} trip** "
+        f"to **{location}**, travelling **{travel_type.lower()}**."
     )
 
+
 # ============================================================
-# AI GENERATION
+# GENERATE TRIP
 # ============================================================
 
 if plan_trip:
@@ -673,7 +684,7 @@ if plan_trip:
     if not location.strip():
 
         st.warning(
-            "📍 Please enter a destination in the sidebar first."
+            "📍 Enter a destination in the sidebar first."
         )
 
     else:
@@ -685,94 +696,88 @@ if plan_trip:
         )
 
         prompt = f"""
-You are VoyageAI, a world-class professional travel planner.
+You are VoyageAI, an expert professional travel planner.
 
-Create a personalized travel itinerary using the following information:
+Create a personalized travel itinerary.
 
-DESTINATION
+DESTINATION:
 {location}
 
-TRIP LENGTH
+DURATION:
 {days} days
 
-BUDGET
+BUDGET:
 {budget}
 
-TRAVEL GROUP
+TRAVELLING WITH:
 {travel_type}
 
-INTERESTS
+INTERESTS:
 {interest_text}
 
-Create a detailed but practical itinerary.
+Create a practical, detailed and enjoyable itinerary.
 
 Use Markdown.
 
-Structure your answer exactly around these sections:
+Structure:
 
 # ✈️ {location} Travel Guide
 
 ## 🌟 Trip Overview
 
-Give a personalized overview of the destination.
+Give a personalized overview.
 
 ## 🗓️ Day-by-Day Itinerary
 
-Create a plan for every day.
+Create a detailed itinerary for every day.
 
 For each day include:
 
 ### Day X
 
-**🌅 Morning**
+🌅 Morning:
 Activities and places.
 
-**🍴 Lunch**
+🍴 Lunch:
 Food suggestions.
 
-**🗺️ Afternoon**
-Activities and sightseeing.
+🗺️ Afternoon:
+Sightseeing and activities.
 
-**🌆 Evening**
-Things to do.
+🌆 Evening:
+Evening activities.
 
-**🍽️ Dinner**
+🍽️ Dinner:
 Local food suggestions.
 
-## 🏛️ Must-Visit Attractions
+## 🏛️ Must-Visit Places
 
-List important attractions and briefly explain them.
+List important attractions with short explanations.
 
 ## 🍜 Food & Local Experiences
 
-Recommend local dishes, food experiences and authentic activities.
+Recommend local dishes and authentic experiences.
 
 ## 💎 Hidden Gems
 
-Suggest less touristy experiences when appropriate.
+Suggest less touristy places or experiences.
 
 ## 💰 Estimated Budget
 
-Break down approximate costs for:
+Give approximate estimates for:
 
-- 🏨 Accommodation
-- 🍜 Food
-- 🚕 Transportation
-- 🎟️ Activities
-- 🛍️ Miscellaneous
+🏨 Accommodation
+🍴 Food
+🚕 Transportation
+🎟️ Activities
+🛍️ Miscellaneous
 
-Keep recommendations appropriate for the selected budget.
+Adjust everything for the selected budget.
 
 ## 🎒 Travel Tips
 
-Include:
-
-- Transportation
-- Local customs
-- Safety
-- Areas to stay
-- Booking advice
-- Tourist mistakes to avoid
+Include transportation, safety, local customs,
+areas to stay and useful booking advice.
 
 ## 🌦️ Best Time to Visit
 
@@ -780,24 +785,24 @@ Explain weather and seasonal considerations.
 
 ## 🧳 Packing Checklist
 
-Give a practical packing list.
+Create a practical packing list.
 
 ## ⭐ Final Recommendations
 
-Give a concise personalized summary.
+Finish with personalized recommendations.
 
 IMPORTANT:
-
-- Make the plan specific to {location}.
-- Do not give generic filler.
-- Consider the travel group.
+- Make everything specific to the destination.
 - Consider the budget.
-- Consider the selected interests.
-- Keep the itinerary realistic.
-- Do not invent exact opening hours or live prices.
-- If prices are mentioned, clearly describe them as approximate.
+- Consider the travel group.
+- Consider the interests.
+- Avoid generic filler.
+- Do not invent live prices.
+- Do not invent opening hours.
+- Clearly label prices as approximate.
 - Do not claim real-time availability.
-- Use emojis naturally.
+- Use Markdown.
+- Do not use HTML.
 """
 
         # ====================================================
@@ -805,36 +810,36 @@ IMPORTANT:
         # ====================================================
 
         with st.status(
-            "✈️ VoyageAI is preparing your adventure...",
+            "✈️ VoyageAI is planning your adventure...",
             expanded=True,
         ) as status:
 
             st.write(
-                f"🔍 Exploring **{location}**..."
+                f"🔍 Exploring {location}..."
             )
 
-            time.sleep(0.6)
+            time.sleep(0.5)
 
             st.write(
-                f"📅 Building your **{days}-day itinerary**..."
+                f"📅 Building your {days}-day itinerary..."
             )
 
-            time.sleep(0.6)
+            time.sleep(0.5)
 
             st.write(
-                f"💰 Optimizing for your **{budget.lower()} budget**..."
+                f"💰 Optimizing for your {budget.lower()} budget..."
             )
 
-            time.sleep(0.6)
+            time.sleep(0.5)
 
             st.write(
-                f"🎒 Personalizing the trip for **{travel_type.lower()} travel**..."
+                f"🎒 Personalizing your {travel_type.lower()} adventure..."
             )
 
-            time.sleep(0.6)
+            time.sleep(0.5)
 
             st.write(
-                "✨ Generating your AI travel guide..."
+                "✨ Generating your travel guide..."
             )
 
             try:
@@ -845,7 +850,7 @@ IMPORTANT:
                 )
 
                 status.update(
-                    label="✅ Your trip is ready!",
+                    label="✅ Your adventure is ready!",
                     state="complete",
                     expanded=False,
                 )
@@ -859,34 +864,33 @@ IMPORTANT:
                 )
 
                 st.error(
-                    f"Something went wrong while generating your trip:\n\n{error}"
+                    f"Gemini could not generate your itinerary:\n\n{error}"
                 )
 
                 st.stop()
 
         # ====================================================
-        # RESULT HEADER
+        # RESULT
         # ====================================================
 
-        st.markdown(
-            '<div class="section-title">🗺️ Your AI Travel Plan</div>',
-            unsafe_allow_html=True,
-        )
+        st.divider()
 
         st.markdown(
-            '<div class="section-subtitle">'
-            'Your personalized itinerary has been generated by VoyageAI.'
-            '</div>',
+            """
+            <div class="section-heading">
+                🗺️ Your Personalized Travel Plan
+            </div>
+
+            <div class="section-description">
+                Your itinerary has been created by VoyageAI.
+            </div>
+            """,
             unsafe_allow_html=True,
         )
 
         st.success(
             f"🎉 Your {days}-day {location} adventure is ready!"
         )
-
-        # ====================================================
-        # ITINERARY
-        # ====================================================
 
         st.markdown(response.text)
 
@@ -896,24 +900,18 @@ IMPORTANT:
 
         st.divider()
 
-        st.markdown(
-            '<div class="section-title">📥 Save Your Adventure</div>',
-            unsafe_allow_html=True,
-        )
-
-        st.caption(
-            "Download your itinerary and keep it with you during your trip."
-        )
+        st.subheader("📥 Save Your Itinerary")
 
         st.download_button(
-            label="📄 Download Travel Plan",
+            "📄 Download Travel Plan",
             data=response.text,
             file_name=(
-                f"{location.strip().replace(' ', '_')}_travel_plan.md"
+                f"{location.replace(' ', '_')}_travel_plan.md"
             ),
             mime="text/markdown",
             use_container_width=True,
         )
+
 
 # ============================================================
 # FOOTER
@@ -925,7 +923,7 @@ st.markdown(
     """
     <div style="
         text-align:center;
-        padding:1.5rem 0;
+        padding:1.5rem;
         color:#64748b;
         font-size:0.9rem;
     ">
@@ -935,9 +933,9 @@ st.markdown(
         &nbsp; • &nbsp;
         Built with Streamlit
         <br>
-        <span style="font-size:0.8rem;">
+        <small>
             Plan smarter. Explore more. Travel unforgettable. 🌍
-        </span>
+        </small>
     </div>
     """,
     unsafe_allow_html=True,
